@@ -6,11 +6,12 @@
 using json = nlohmann::json;
 
 std::string conanfile_py_imports = R"###(
-from conans import ConanFile, CMake, tools, os
+from conans import ConanFile, CMake, tools
+from pathlib import Path
+import os
 )###";
 
 std::string conanfile_py_bin_dir = R"###(
-from pathlib import Path
 homedir = Path.home()
 conan_dir = os.path.join(homedir, ".conan")
 conan_bin_dir = os.path.join(conan_dir, "bin")
@@ -41,15 +42,18 @@ class {{ proj_name }}Conan(ConanFile):
     exports_sources = "src/*"
 )###";
 
+std::string conanfile_py_build_method_no_src = R"###(
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+)###";
+
 std::string conanfile_py_build_method = R"###(
     def build(self):
         cmake = CMake(self)
         cmake.configure(source_folder="src")
         cmake.build()
-        # Explicit way:
-        # self.run('cmake %s/hello %s'
-        #          % (self.source_folder, cmake.command_line))
-        # self.run("cmake --build . %s" % cmake.build_config)
 )###";
 
 std::string conanfile_py_package_method_bin = R"###(
@@ -59,7 +63,7 @@ std::string conanfile_py_package_method_bin = R"###(
 
 std::string conanfile_py_package_method_header_only = R"###(
     def package(self):
-        self.copy("{{ proj_name }}", dst="include", src="src")
+        self.copy("{{ proj_name }}/*", dst="include", src="src")
 )###";
 
 std::string conanfile_py_imports_method = R"###(
@@ -120,6 +124,6 @@ std::string conanfile_py_test_package(std::string proj_name) {
     AddData(proj_name);
     return conanfile_py_imports +
            inja::render(conanfile_py_project_info_test_package, data) +
-           conanfile_py_build_method + conanfile_py_imports_method +
+           conanfile_py_build_method_no_src + conanfile_py_imports_method +
            conanfile_py_test_method;
 }

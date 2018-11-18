@@ -32,14 +32,24 @@ message(CONAN_LIBS ": ${CONAN_LIBS}")
 target_link_libraries(${proj_name} ${CONAN_LIBS})
 )reuw-1437fhdu2n";
 
+std::string cmake_proj_for_binary_non_nested = R"reuw-1437fhdu2n(
+add_executable(${proj_name} ${proj_name}.cpp)
+message(CONAN_LIBS ": ${CONAN_LIBS}")
+target_link_libraries(${proj_name} ${CONAN_LIBS})
+)reuw-1437fhdu2n";
+
 std::string exec_cotire = R"reuw-1437fhdu2n(
 cotire(${proj_name})
 )reuw-1437fhdu2n";
 
-std::string cmakelists_binary_render(std::string proj_name) {
+std::string cmakelists_binary_render(std::string proj_name,
+                                     bool nest_proj_in_src) {
     nlohmann::json data;
     AddData(proj_name);
     return inja::render(
-        cmake_commons + include_cotire + cmake_proj_for_binary + exec_cotire,
+        cmake_commons + include_cotire +
+            (nest_proj_in_src ? cmake_proj_for_binary
+                              : cmake_proj_for_binary_non_nested) +
+            exec_cotire,
         data);
 }

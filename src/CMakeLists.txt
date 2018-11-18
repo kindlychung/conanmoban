@@ -12,7 +12,7 @@ endif()
 
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
 include(cotire)
-add_executable(${proj_name} ${proj_name}/${proj_name}.cpp ${proj_name}/default_opts.cpp ${proj_name}/conanfile_py.cpp ${proj_name}/cmakelists.cpp ${proj_name}/cotire_cmake.cpp   ${proj_name}/git_attr.cpp   ${proj_name}/git_ignore.cpp  ${proj_name}/hello_world.cpp   )
+add_executable(${proj_name} ${proj_name}/${proj_name}.cpp ${proj_name}/default_opts.cpp ${proj_name}/conanfile_py.cpp ${proj_name}/cmakelists.cpp ${proj_name}/cotire_cmake.cpp   ${proj_name}/git_attr.cpp   ${proj_name}/git_ignore.cpp  ${proj_name}/hello_world.cpp ${proj_name}/hello_header_only.cpp  ${proj_name}/test_package_cpp.cpp    )
 message(CONAN_LIBS ": ${CONAN_LIBS}")
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release CACHE STRING

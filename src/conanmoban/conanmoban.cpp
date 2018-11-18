@@ -105,6 +105,33 @@ int main(int argc, char const** argv) {
         std::ofstream hello_world_cpp_ofs{hello_world_cpp_path};
         hello_world_cpp_ofs << hello_world_cpp;
     } else if (args["lib"].asBool()) {
+        // for a library project there is a test_package dir
+        auto test_package_dir = proj_path / "test_package";
+        auto test_conanfile_path = test_package_dir / "conanfile.py";
+        auto test_cmake_path = test_package_dir / "CMakeLists.txt";
+        auto test_cpp_path = test_package_dir / "example.cpp";
+        auto test_cotire_path = test_package_dir / "cotire.cmake";
+        CreateDir(test_package_dir);
+        std::ofstream test_conanfile_ofs{test_conanfile_path};
+        test_conanfile_ofs << conanfile_py_test_package(proj_name);
+        std::ofstream test_cmake_ofs{test_cmake_path};
+        test_cmake_ofs << cmakelists_binary_render("example", false);
+        std::ofstream test_cpp_ofs{test_cpp_path};
+        test_cpp_ofs << test_package_cpp_render(proj_name);
+        std::ofstream test_cotire_ofs{test_cotire_path};
+        test_cotire_ofs << cotire_cmake;
+
+        if (args["--header_only"].asBool()) {
+            std::ofstream conanfile_py_ofs{conanfile_py_path};
+            conanfile_py_ofs << conanfile_py_header_only(
+                proj_name, opt_author_name, opt_author_email,
+                opt_github_username, opt_topic, opt_description);
+            // no need for cmake file, since there is no build
+            auto hello_header_path =
+                namespace_dir / fmt::format("{}.h", proj_name);
+            std::ofstream hello_header_ofs{hello_header_path};
+            hello_header_ofs << hello_header_only;
+        }
     }
     return 0;
 }

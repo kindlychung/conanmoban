@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-source $HOME/dotfiles/scripts/assert.sh/assert.sh
 
 FILE="${BASH_SOURCE[0]}"
 FILE="$(realpath $FILE)"
@@ -10,6 +9,7 @@ fi
 echo "$FILE"
 DIR=$(dirname "$FILE")
 DIR=$(realpath "${DIR}")    # resolve its full path if need be
+source "$DIR/assert.sh"
 
 # test a binary template
 cd "$DIR/src/build"
