@@ -1,0 +1,10 @@
+#include <string>
+
+std::string git_attr = R"###(
+*.py linguist-language=c++
+*.txt linguist-language=c++
+*.cpp linguist-language=c++
+*make linguist-language=c++
+*makefile linguist-language=c++
+*Makefile linguist-language=c++
+)###";

@@ -1,7 +1,24 @@
 cmake_minimum_required(VERSION 2.8)
-project(MyHello CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(proj_name conanmoban)
+project(${proj_name} CXX)
+set(conan_cmake_file "${CMAKE_BINARY_DIR}/conanbuildinfo.cmake")
+if(EXISTS ${conan_cmake_file})
+    include(${conan_cmake_file})
+    conan_basic_setup()
+endif()
 
-include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-conan_basic_setup()
+set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}")
+include(cotire)
+add_executable(${proj_name} ${proj_name}/${proj_name}.cpp ${proj_name}/default_opts.cpp ${proj_name}/conanfile_py.cpp ${proj_name}/cmakelists.cpp ${proj_name}/cotire_cmake.cpp   ${proj_name}/git_attr.cpp   ${proj_name}/git_ignore.cpp  ${proj_name}/hello_world.cpp   )
+message(CONAN_LIBS ": ${CONAN_LIBS}")
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING
+    "Choose the type of build, options are: None(CMAKE_CXX_FLAGS or CMAKE_C_FLAGS used) Debug Release RelWithDebInfo MinSizeRel.")
+endif ()
+target_link_libraries(${proj_name} ${CONAN_LIBS} stdc++fs)
+cotire(${proj_name})
 
-add_library(hello hello.cpp)
+
