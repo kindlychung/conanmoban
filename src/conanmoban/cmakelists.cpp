@@ -65,15 +65,3 @@ std::string cmakelists_render(std::string proj_name, ProjType ptype,
     return inja::render(
         cmake_commons + include_cotire + cmake_proj + exec_cotire, data);
 }
-
-std::string cmakelists_binary_render(std::string proj_name,
-                                     bool nest_proj_in_src) {
-    nlohmann::json data;
-    AddData(proj_name);
-    return inja::render(
-        cmake_commons + include_cotire +
-            (nest_proj_in_src ? cmake_proj_for_binary
-                              : cmake_proj_for_binary_non_nested) +
-            exec_cotire,
-        data);
-}

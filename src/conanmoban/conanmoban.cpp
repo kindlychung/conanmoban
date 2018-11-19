@@ -97,8 +97,7 @@ int main(int argc, char const** argv) {
             proj_name, opt_author_name, opt_author_email, opt_github_username,
             opt_topic, opt_description);
         std::ofstream cmakelists_ofs{cmakelists_path};
-        cmakelists_ofs << cmakelists_render(proj_name, ProjType::executable,
-                                            true);
+        cmakelists_ofs << cmakelists_render(proj_name, ProjType::executable);
         auto hello_world_cpp_path =
             namespace_dir / fmt::format("{}.cpp", proj_name);
         std::ofstream hello_world_cpp_ofs{hello_world_cpp_path};
@@ -114,7 +113,8 @@ int main(int argc, char const** argv) {
         std::ofstream test_conanfile_ofs{test_conanfile_path};
         test_conanfile_ofs << conanfile_py_test_package(proj_name);
         std::ofstream test_cmake_ofs{test_cmake_path};
-        test_cmake_ofs << cmakelists_binary_render("example", false);
+        test_cmake_ofs << cmakelists_render("example", ProjType::executable,
+                                            false);
         std::ofstream test_cpp_ofs{test_cpp_path};
         test_cpp_ofs << test_package_cpp_render(proj_name);
         std::ofstream test_cotire_ofs{test_cotire_path};
@@ -136,7 +136,7 @@ int main(int argc, char const** argv) {
                 proj_name, opt_author_name, opt_author_email,
                 opt_github_username, opt_topic, opt_description);
             std::ofstream cmakelists_ofs{cmakelists_path};
-            cmakelists_ofs << cmakelists_binary_render(proj_name);
+            cmakelists_ofs << cmakelists_render(proj_name, ProjType::library);
             auto lib_header_path =
                 namespace_dir / fmt::format("{}.h", proj_name);
             auto lib_cpp_path =

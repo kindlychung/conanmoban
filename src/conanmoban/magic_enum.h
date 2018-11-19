@@ -6,7 +6,39 @@
 #include <string>
 #include <vector>
 
+// todo: refactor this into a separate library
 std::vector<std::string> splitString(std::string str, char sep = ',');
+
+#define STRING_REMOVE_CHAR(str, ch) \
+    str.erase(std::remove(str.begin(), str.end(), ch), str.end())
+template <typename T>
+std::map<T, std::string> generateEnumMap(std::string strMap) {
+    STRING_REMOVE_CHAR(strMap, ' ');
+    STRING_REMOVE_CHAR(strMap, '(');
+    std::vector<std::string> enumTokens(splitString(strMap));
+    std::map<T, std::string> retMap;
+    T inxMap;
+    inxMap = 0;
+    for (auto iter = enumTokens.begin(); iter != enumTokens.end(); ++iter) {
+        // Token: [EnumName | EnumName=EnumValue]
+        std::string enumName;
+        T enumValue;
+        if (iter->find('=') == std::string::npos) {
+            enumName = *iter;
+        } else {
+            std::vector<std::string> enumNameValue(splitString(*iter, '='));
+            enumName = enumNameValue[0];
+            // inxMap = static_cast<T>(enumNameValue[1]);
+            if (std::is_unsigned<T>::value) {
+                inxMap = static_cast<T>(std::stoull(enumNameValue[1], 0, 0));
+            } else {
+                inxMap = static_cast<T>(std::stoll(enumNameValue[1], 0, 0));
+            }
+        }
+        retMap[inxMap++] = enumName;
+    }
+    return retMap;
+}
 
 #define DECLARE_ENUM_INTERFACE_WITH_TYPE(E, T, ...)        \
     enum class E : T { __VA_ARGS__ };                      \
@@ -60,9 +92,6 @@ std::vector<std::string> splitString(std::string str, char sep = ',');
     }
 
 #define DECLARE_ENUM(E, ...) DECLARE_ENUM_WITH_TYPE(E, int32_t, __VA_ARGS__)
-
-template <typename T>
-std::map<T, std::string> generateEnumMap(std::string strMap);
 
 // DECLARE_ENUM_WITH_TYPE(TestEnumClass, int32_t, ZERO = 0x00, TWO = 0x02,
 //                        ONE = 0x01, THREE = 0x03, FOUR);
