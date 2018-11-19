@@ -66,6 +66,18 @@ std::string conanfile_py_package_method_header_only = R"###(
         self.copy("{{ proj_name }}/*", dst="include", src="src")
 )###";
 
+std::string conanfile_py_package_method_lib = R"###(
+    def package(self):
+        self.copy("{{ proj_name }}/*.hpp", dst="include", src="src")
+        self.copy("{{ proj_name }}/*.h", dst="include", src="src")
+        self.copy("*.lib", dst="lib", keep_path=False)
+        self.copy("*.dll", dst="bin", keep_path=False)
+        self.copy("*.dylib*", dst="lib", keep_path=False)
+        self.copy("*.so", dst="lib", keep_path=False)
+        self.copy("*.a", dst="lib", keep_path=False)
+
+)###";
+
 std::string conanfile_py_imports_method = R"###(
     def imports(self):
         self.copy("*", dst="include", src="include")
@@ -103,6 +115,29 @@ std::string conanfile_py_test_method = R"###(
             self.run(".%sexample" % os.sep)
 )###";
 
+std::string conanfile_py_package_info_method_lib = R"###(
+    def package_info(self):
+        self.cpp_info.libs = ["{{ proj_name }}"]
+)###";
+
+std::string conanfile_py_lib(std::string proj_name, std::string author_name,
+                             std::string author_email,
+                             std::string github_username, std::string topic,
+                             std::string description) {
+    json data;
+    AddData(proj_name);
+    AddData(author_name);
+    AddData(author_email);
+    AddData(github_username);
+    AddData(description);
+    AddData(topic);
+    return inja::render(
+        conanfile_py_imports + conanfile_py_project_info +
+            conanfile_py_build_method + conanfile_py_package_method_lib +
+            conanfile_py_imports_method + conanfile_py_package_info_method_lib,
+        data);
+}
+
 std::string conanfile_py_header_only(
     std::string proj_name, std::string author_name, std::string author_email,
     std::string github_username, std::string topic, std::string description) {
@@ -116,7 +151,7 @@ std::string conanfile_py_header_only(
     return conanfile_py_imports +
            inja::render(conanfile_py_project_info, data) +
            inja::render(conanfile_py_package_method_header_only, data) +
-           conanfile_py_imports_method;
+           "    no_copy_source = True" + conanfile_py_imports_method;
 }
 
 std::string conanfile_py_test_package(std::string proj_name) {

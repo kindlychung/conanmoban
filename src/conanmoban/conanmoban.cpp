@@ -14,9 +14,7 @@ using json = nlohmann::json;
 
 #define VERSION "0.0.1"
 
-// todo: create templates for header only lib
 // todo: create templates for a non-header-only lib
-// todo: make conanmoban lib --headeronly work
 // todo: make conanmoban lib work
 
 // std::string proj_name, std::string author_name, std::string author_email,
@@ -99,7 +97,8 @@ int main(int argc, char const** argv) {
             proj_name, opt_author_name, opt_author_email, opt_github_username,
             opt_topic, opt_description);
         std::ofstream cmakelists_ofs{cmakelists_path};
-        cmakelists_ofs << cmakelists_binary_render(proj_name);
+        cmakelists_ofs << cmakelists_render(proj_name, ProjType::executable,
+                                            true);
         auto hello_world_cpp_path =
             namespace_dir / fmt::format("{}.cpp", proj_name);
         std::ofstream hello_world_cpp_ofs{hello_world_cpp_path};
@@ -131,6 +130,21 @@ int main(int argc, char const** argv) {
                 namespace_dir / fmt::format("{}.h", proj_name);
             std::ofstream hello_header_ofs{hello_header_path};
             hello_header_ofs << hello_header_only;
+        } else {
+            std::ofstream conanfile_py_ofs{conanfile_py_path};
+            conanfile_py_ofs << conanfile_py_lib(
+                proj_name, opt_author_name, opt_author_email,
+                opt_github_username, opt_topic, opt_description);
+            std::ofstream cmakelists_ofs{cmakelists_path};
+            cmakelists_ofs << cmakelists_binary_render(proj_name);
+            auto lib_header_path =
+                namespace_dir / fmt::format("{}.h", proj_name);
+            auto lib_cpp_path =
+                namespace_dir / fmt::format("{}.cpp", proj_name);
+            std::ofstream lib_header_ofs{lib_header_path};
+            lib_header_ofs << hello_lib_h;
+            std::ofstream lib_cpp_ofs{lib_cpp_path};
+            lib_cpp_ofs << hello_lib_cpp;
         }
     }
     return 0;
