@@ -18,6 +18,9 @@ std::string cmakelists_binary_render(std::string proj_name,
 extern std::string hello_world_cpp;
 extern std::string hello_header_only;
 
+extern std::string hello_lib_cpp;
+extern std::string hello_lib_h;
+
 extern std::string cotire_cmake;
 extern std::string git_ignore;
 extern std::string git_attr;
