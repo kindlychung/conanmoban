@@ -12,14 +12,14 @@ DIR=$(realpath "${DIR}")    # resolve its full path if need be
 source "$DIR/assert.sh"
 
 # test a binary template
-cd "$DIR/src/build"
-conan install --build missing ../..
-conan build ../..
+cd "$DIR/build"
+conan install --build missing ..
+conan build ..
 rm -rf cligod
 bin/conanmoban bin cligod
-cd cligod/src/build
-conan install --build missing ../..
-conan build ../..
+cd cligod/build
+conan install --build missing ..
+conan build ..
 echo "cligod: " $(bin/cligod)
 assert_eq $"hello" $(bin/cligod)
 if [[ $? != 0 ]]; then
@@ -28,25 +28,25 @@ fi
 
 
 # test a header-only library template
-cd "$DIR/src/build"
+cd "$DIR/build"
 rm -rf headergod
 bin/conanmoban lib  headergod --header_only
-cd headergod/src/build
-conan install --build missing ../..
-conan build ../..
-assert_eq "3" $(conan create ../.. jzien/dev | tail -n1)
+cd headergod/build
+conan install --build missing ..
+conan build ..
+assert_eq "3" $(conan create .. jzien/dev | tail -n1)
 if [[ $? != 0 ]]; then
 (>&2 echo "headergod should output '3'")
 fi
 
-# test a header-only library template
-cd "$DIR/src/build"
+# test a library template
+cd "$DIR/build"
 rm -rf libgod
 bin/conanmoban lib  libgod
-cd libgod/src/build
-conan install --build missing ../..
-conan build ../..
-assert_eq "3" $(conan create ../.. jzien/dev | tail -n1)
+cd libgod/build
+conan install --build missing ..
+conan build ..
+assert_eq "3" $(conan create .. jzien/dev | tail -n1)
 if [[ $? != 0 ]]; then
 (>&2 echo "libgod test should output '3'")
 fi

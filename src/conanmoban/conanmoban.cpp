@@ -61,7 +61,7 @@ int main(int argc, char const** argv) {
     // setup directories
     auto proj_path = fs::path(proj_name);
     auto src_dir = proj_path / "src";
-    auto build_dir = src_dir / "build";
+    auto build_dir = proj_path / "build";
     auto namespace_dir = src_dir / proj_name;
 #define CreateDir(d)                                                     \
     if (!fs::create_directory((d))) {                                    \
