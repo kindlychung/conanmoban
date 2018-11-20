@@ -84,67 +84,98 @@ int main(int argc, char const** argv) {
     auto git_attr_path = proj_path / ".gitattributes";
     auto git_ignore_path = proj_path / ".gitignore";
     auto conanfile_py_path = proj_path / "conanfile.py";
+    auto readme_path = proj_path / "readme.md";
     std::ofstream git_attr_ofs{git_attr_path};
     git_attr_ofs << git_attr;
     std::ofstream git_ignore_ofs{git_ignore_path};
     git_ignore_ofs << git_ignore;
     std::ofstream cotire_ofs{cotire_path};
     cotire_ofs << cotire_cmake;
+    std::ofstream readme_ofs{readme_path};
+    readme_ofs << "# " << proj_name;
 
     if (args["bin"].asBool()) {
-        std::ofstream conanfile_py_ofs{conanfile_py_path};
-        conanfile_py_ofs << conanfile_py_binary_render(
-            proj_name, opt_author_name, opt_author_email, opt_github_username,
-            opt_topic, opt_description);
-        std::ofstream cmakelists_ofs{cmakelists_path};
-        cmakelists_ofs << cmakelists_render(proj_name, ProjType::executable);
-        auto hello_world_cpp_path =
-            namespace_dir / fmt::format("{}.cpp", proj_name);
-        std::ofstream hello_world_cpp_ofs{hello_world_cpp_path};
-        hello_world_cpp_ofs << hello_world_cpp;
+        {  // write conanfile.py
+            std::ofstream conanfile_py_ofs{conanfile_py_path};
+            conanfile_py_ofs << conanfile_py_binary_render(
+                proj_name, opt_author_name, opt_author_email,
+                opt_github_username, opt_topic, opt_description);
+        }
+        {  // write src/CmakeLists.txt
+            std::ofstream cmakelists_ofs{cmakelists_path};
+            cmakelists_ofs << cmakelists_render(proj_name,
+                                                ProjType::executable);
+        }
+        {  // write src/proj_name/proj_name.cpp
+            auto hello_world_cpp_path =
+                namespace_dir / fmt::format("{}.cpp", proj_name);
+            std::ofstream hello_world_cpp_ofs{hello_world_cpp_path};
+            hello_world_cpp_ofs << hello_world_cpp;
+        }
     } else if (args["lib"].asBool()) {
         // for a library project there is a test_package dir
         auto test_package_dir = proj_path / "test_package";
-        auto test_conanfile_path = test_package_dir / "conanfile.py";
-        auto test_cmake_path = test_package_dir / "CMakeLists.txt";
-        auto test_cpp_path = test_package_dir / "example.cpp";
-        auto test_cotire_path = test_package_dir / "cotire.cmake";
         CreateDir(test_package_dir);
-        std::ofstream test_conanfile_ofs{test_conanfile_path};
-        test_conanfile_ofs << conanfile_py_test_package(proj_name);
-        std::ofstream test_cmake_ofs{test_cmake_path};
-        test_cmake_ofs << cmakelists_render("example", ProjType::executable,
-                                            false);
-        std::ofstream test_cpp_ofs{test_cpp_path};
-        test_cpp_ofs << test_package_cpp_render(proj_name);
-        std::ofstream test_cotire_ofs{test_cotire_path};
-        test_cotire_ofs << cotire_cmake;
+        {  // write test_package/conanfile.py
+            auto test_conanfile_path = test_package_dir / "conanfile.py";
+            std::ofstream test_conanfile_ofs{test_conanfile_path};
+            test_conanfile_ofs << conanfile_py_test_package(proj_name);
+        }
+        {  // write test_package/CmakeLists.txt
+            auto test_cmake_path = test_package_dir / "CMakeLists.txt";
+            std::ofstream test_cmake_ofs{test_cmake_path};
+            test_cmake_ofs << cmakelists_render("example", ProjType::executable,
+                                                false);
+        }
+        {  // write test_package/example.cpp
+            auto test_cpp_path = test_package_dir / "example.cpp";
+            std::ofstream test_cpp_ofs{test_cpp_path};
+            test_cpp_ofs << test_package_cpp_render(proj_name);
+        }
+        {  // write test_package/cotire.cmake
+            auto test_cotire_path = test_package_dir / "cotire.cmake";
+            std::ofstream test_cotire_ofs{test_cotire_path};
+            test_cotire_ofs << cotire_cmake;
+        }
 
         if (args["--header_only"].asBool()) {
-            std::ofstream conanfile_py_ofs{conanfile_py_path};
-            conanfile_py_ofs << conanfile_py_header_only(
-                proj_name, opt_author_name, opt_author_email,
-                opt_github_username, opt_topic, opt_description);
+            {  // write conanfile.py
+                std::ofstream conanfile_py_ofs{conanfile_py_path};
+                conanfile_py_ofs << conanfile_py_header_only(
+                    proj_name, opt_author_name, opt_author_email,
+                    opt_github_username, opt_topic, opt_description);
+            }
             // no need for cmake file, since there is no build
-            auto hello_header_path =
-                namespace_dir / fmt::format("{}.h", proj_name);
-            std::ofstream hello_header_ofs{hello_header_path};
-            hello_header_ofs << hello_header_only;
+            {  // write src/proj_name/proj_name.h
+                auto hello_header_path =
+                    namespace_dir / fmt::format("{}.h", proj_name);
+                std::ofstream hello_header_ofs{hello_header_path};
+                hello_header_ofs << hello_header_only;
+            }
         } else {
-            std::ofstream conanfile_py_ofs{conanfile_py_path};
-            conanfile_py_ofs << conanfile_py_lib(
-                proj_name, opt_author_name, opt_author_email,
-                opt_github_username, opt_topic, opt_description);
-            std::ofstream cmakelists_ofs{cmakelists_path};
-            cmakelists_ofs << cmakelists_render(proj_name, ProjType::library);
-            auto lib_header_path =
-                namespace_dir / fmt::format("{}.h", proj_name);
-            auto lib_cpp_path =
-                namespace_dir / fmt::format("{}.cpp", proj_name);
-            std::ofstream lib_header_ofs{lib_header_path};
-            lib_header_ofs << hello_lib_h;
-            std::ofstream lib_cpp_ofs{lib_cpp_path};
-            lib_cpp_ofs << hello_lib_cpp;
+            {  // write conanfile.py
+                std::ofstream conanfile_py_ofs{conanfile_py_path};
+                conanfile_py_ofs << conanfile_py_lib(
+                    proj_name, opt_author_name, opt_author_email,
+                    opt_github_username, opt_topic, opt_description);
+            }
+            {  // write src/CmakeLists.txt
+                std::ofstream cmakelists_ofs{cmakelists_path};
+                cmakelists_ofs
+                    << cmakelists_render(proj_name, ProjType::library);
+            }
+            {  // write sr/proj_name/proj_name.h
+                auto lib_header_path =
+                    namespace_dir / fmt::format("{}.h", proj_name);
+                std::ofstream lib_header_ofs{lib_header_path};
+                lib_header_ofs << hello_lib_h;
+            }
+            {  // write sr/proj_name/proj_name.cpp
+                auto lib_cpp_path =
+                    namespace_dir / fmt::format("{}.cpp", proj_name);
+                std::ofstream lib_cpp_ofs{lib_cpp_path};
+                lib_cpp_ofs << hello_lib_cpp;
+            }
         }
     }
     return 0;
