@@ -38,3 +38,15 @@ assert_eq "3" $(conan create ../.. jzien/dev | tail -n1)
 if [[ $? != 0 ]]; then
 (>&2 echo "headergod should output '3'")
 fi
+
+# test a header-only library template
+cd "$DIR/src/build"
+rm -rf libgod
+bin/conanmoban lib  libgod
+cd libgod/src/build
+conan install --build missing ../..
+conan build ../..
+assert_eq "3" $(conan create ../.. jzien/dev | tail -n1)
+if [[ $? != 0 ]]; then
+(>&2 echo "libgod test should output '3'")
+fi
