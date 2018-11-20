@@ -11,7 +11,7 @@ if not os.path.exists(conan_bin_dir):
 
 class ConanmobanConan(ConanFile):
     name = "conanmoban"
-    version = "0.0.1"
+    version = "1.0.0"
     license = "LGPL"
     author = "kaiyin keenzhong@qq.com"
     url = "https://github.com/kindlychung/conanmoban"
@@ -20,7 +20,7 @@ class ConanmobanConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=False"
-    requires = "rapidjson/1.1.0@bincrafters/stable", "docopt/0.6.2@conan/stable", "inja/1.0.999@jzien/dev", "fmt/5.2.1@bincrafters/stable"
+    requires = "docopt/0.6.2@conan/stable", "inja/1.0.999@jzien/dev", "fmt/5.2.1@bincrafters/stable"
     generators = "cmake"
     exports_sources = "src/*"
 

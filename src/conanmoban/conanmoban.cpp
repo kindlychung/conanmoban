@@ -12,13 +12,7 @@
 namespace fs = std::filesystem;
 using json = nlohmann::json;
 
-#define VERSION "0.0.1"
-
-// todo: create templates for a non-header-only lib
-// todo: make conanmoban lib work
-
-// std::string proj_name, std::string author_name, std::string author_email,
-// std::string github_username, std::string topic, std::string description);
+#define VERSION "1.0.0"
 
 static const char USAGE[] =
     R"####(Conan project templates. (c) 2018 Kaiyin Zhong
@@ -32,7 +26,7 @@ Usage:
 Options:
   -h --help                               Show this screen.
   --version                               Show version.
-  --author_name=<author_name>             Name of the author.
+  --author_name=<author_name>             Name of the author. This option and the ones below can also be given in a json file ($HOME/.conanmoban.json), for the format of {"author_name": "value", ...}. The value given on the commandline will take precedence. 
   --author_email=<author_email>           Email of the author.
   --github_username=<github_username>     Github handle.
   --topic=<topic>                         Topic of the project
