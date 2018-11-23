@@ -39,7 +39,7 @@ class {{ proj_name }}Conan(ConanFile):
     default_options = "shared=False"
     requires = ("docopt/0.6.2@conan/stable",) 
     generators = "cmake"
-    exports_sources = "src/*"
+    exports_sources = "src/%s/*" % name, "src/CMakeLists.txt", "src/*.cmake"
 )###";
 
 std::string conanfile_py_build_method_no_src = R"###(

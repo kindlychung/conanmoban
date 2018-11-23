@@ -22,7 +22,7 @@ class ConanmobanConan(ConanFile):
     default_options = "shared=False"
     requires = "docopt/0.6.2@conan/stable", "inja/1.0.999@jzien/dev", "fmt/5.2.1@bincrafters/stable"
     generators = "cmake"
-    exports_sources = "src/*"
+    exports_sources = "src/%s/*" % name, "src/CMakeLists.txt", "src/*.cmake"
 
     def build(self):
         cmake = CMake(self)
