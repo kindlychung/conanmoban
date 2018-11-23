@@ -81,10 +81,7 @@ std::string conanfile_py_package_method_lib = R"###(
 std::string conanfile_py_imports_method = R"###(
     def imports(self):
         self.copy("*", dst="include", src="include")
-        self.copy("*.dll", dst="bin", src="bin")
-        self.copy("*.dylib*", dst="bin", src="lib")
-        self.copy("*.a", dst="bin", src="lib")
-        self.copy("*.so", dst="bin", src="lib")
+        self.copy("*", dst="bin", src="lib")
 )###";
 
 std::string conanfile_py_deploy_method_bin = R"###(

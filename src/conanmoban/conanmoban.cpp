@@ -12,7 +12,7 @@
 namespace fs = std::filesystem;
 using json = nlohmann::json;
 
-#define VERSION "1.0.0"
+#define VERSION "1.0.1"
 
 static const char USAGE[] =
     R"####(Conan project templates. (c) 2018 Kaiyin Zhong

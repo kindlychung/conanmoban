@@ -11,7 +11,7 @@ if not os.path.exists(conan_bin_dir):
 
 class ConanmobanConan(ConanFile):
     name = "conanmoban"
-    version = "1.0.0"
+    version = "1.0.1"
     license = "LGPL"
     author = "kaiyin keenzhong@qq.com"
     url = "https://github.com/kindlychung/conanmoban"
