@@ -5,3 +5,5 @@
 BUCKAROO_DEPS
 **/build
 **/*exe
+deploy_manifest.txt
+**/*.swp
