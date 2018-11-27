@@ -44,12 +44,13 @@ class {{ proj_name }}Conan(ConanFile):
     exports_sources = "src/%s/*" % name, "src/CMakeLists.txt", "src/*.cmake"
 
     def system_requirements(self):
-        pack_name = None
+        pack_list = None
         if os_info.linux_distro == "ubuntu":
-            pack_name = None # put the system libs that you require here, e.g. ["libpulse-dev"] 
-        if pack_name:
-            installer = SystemPackageTool()
-            installer.install(pack_name)
+            pack_list = []
+        if pack_list:
+            for p in pack_list:
+                installer = SystemPackageTool()
+                installer.install(p)
 )###";
 
 std::string conanfile_py_build_method_no_src = R"###(
