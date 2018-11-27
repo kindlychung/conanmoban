@@ -7,8 +7,10 @@ using json = nlohmann::json;
 
 std::string conanfile_py_imports = R"###(
 from conans import ConanFile, CMake, tools
+from conans.tools import os_info, SystemPackageTool
 from pathlib import Path
 import os
+import shutil
 )###";
 
 std::string conanfile_py_bin_dir = R"###(
@@ -40,6 +42,14 @@ class {{ proj_name }}Conan(ConanFile):
     requires = ("docopt/0.6.2@conan/stable",) 
     generators = "cmake"
     exports_sources = "src/%s/*" % name, "src/CMakeLists.txt", "src/*.cmake"
+
+    def system_requirements(self):
+        pack_name = None
+        if os_info.linux_distro == "ubuntu":
+            pack_name = None # put the system libs that you require here, e.g. ["libpulse-dev"] 
+        if pack_name:
+            installer = SystemPackageTool()
+            installer.install(pack_name)
 )###";
 
 std::string conanfile_py_build_method_no_src = R"###(

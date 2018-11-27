@@ -12,25 +12,25 @@
 namespace fs = std::filesystem;
 using json = nlohmann::json;
 
-#define VERSION "1.0.1"
+#define VERSION "1.0.3"
 
 static const char USAGE[] =
     R"####(Conan project templates. (c) 2018 Kaiyin Zhong
 
 Usage:
-   conanmoban bin <proj_name> [--author_name=<author_name>] [--author_email=<author_email>] [--github_username=<github_username>] [--topic=<topic>] [--description=<description>]
-   conanmoban lib <proj_name> [--author_name=<author_name>] [--author_email=<author_email>] [--github_username=<github_username>] [--topic=<topic>] [--description=<description>] [--header_only]
+   conanmoban bin <proj_name> [--author_name <author_name>] [--author_email <author_email>] [--github_username <github_username>] [--topic <topic>] [--description <description>]
+   conanmoban lib <proj_name> [--author_name <author_name>] [--author_email <author_email>] [--github_username <github_username>] [--topic <topic>] [--description <description>] [--header_only]
    conanmoban (-h | --help)
    conanmoban --version
 
 Options:
   -h --help                               Show this screen.
   --version                               Show version.
-  --author_name=<author_name>             Name of the author. This option and the ones below can also be given in a json file ($HOME/.conanmoban.json), for the format of {"author_name": "value", ...}. The value given on the commandline will take precedence. 
-  --author_email=<author_email>           Email of the author.
-  --github_username=<github_username>     Github handle.
-  --topic=<topic>                         Topic of the project
-  --description=<description>             Description of the project.
+  --author_name <author_name>             Name of the author. This option and the ones below can also be given in a json file ($HOME/.conanmoban.json), for the format of {"author_name": "value", ...}. The value given on the commandline will take precedence. 
+  --author_email <author_email>           Email of the author.
+  --github_username <github_username>     Github handle.
+  --topic <topic>                         Topic of the project
+  --description <description>             Description of the project.
 )####";
 
 int main(int argc, char const** argv) {
